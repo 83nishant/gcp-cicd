@@ -1,69 +1,34 @@
 pipeline {
-
     agent any
-	
+
     environment {
         GOOGLE_APPLICATION_CREDENTIALS = credentials('storage')
-	GIT_TOKEN = credentials('git-token')
-    }
-    
-    stages{
-        stage("Code Clone"){
-            steps{
-               script{
-                   clone("https://github.com/83nishant/jenkins.git", "main")
-               }
-            }
-        }
-        stage("Trivy File System Scan"){
-            steps{
-                script{
-                    trivy_fs()
-                }
-            }
-        }
-        stage("Build"){
-            steps{
-                sh "docker build -t two-tier-flask-app ."
-            }
-            
-        }
-        stage("Test"){
-            steps{
-                echo "Developer / Tester tests likh ke dega..."
-            }
-            
-        }
-        stage("Push to Docker Hub"){
-            steps{
-                script{
-                    docker_push("dockerhubcreds","two-tier-flask-app")
-                }  
-            }
-        }
-        stage("Deploy"){
-            steps{
-                sh "docker compose up -d --build flask-app"
-            }
-        }
+		GIT_TOKEN = credentials('git-token')
     }
 
-/*post{
-        success{
-            script{
-                emailext from: 'mentor@trainwithshubham.com',
-                to: 'mentor@trainwithshubham.com',
-                body: 'Build success for Demo CICD App',
-                subject: 'Build success for Demo CICD App'
+    stages {
+        stage('Checkout') {
+            steps {
+                git 'https://github.com/83nishant/gcp-cicd.git'
             }
         }
-        failure{
-            script{
-                emailext from: 'mentor@trainwithshubham.com',
-                to: 'mentor@trainwithshubham.com',
-                body: 'Build Failed for Demo CICD App',
-                subject: 'Build Failed for Demo CICD App'
+
+        stage('Terraform Init') {
+            steps {
+                sh 'terraform init'
             }
         }
-    } */
+
+        stage('Terraform Plan') {
+            steps {
+                sh 'terraform plan -var-file="terraform.tfvars"'
+            }
+        }
+
+        stage('Terraform Apply') {
+            steps {
+                sh 'terraform apply -auto-approve -var-file="terraform.tfvars"'
+            }
+        }
+    }
 }

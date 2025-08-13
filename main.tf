@@ -1,15 +1,16 @@
-resource "google_storage_bucket" "my-bucket" {
-  name                     = "gcp-demo-1"
-  project                  = "tt-dev-001"
-  location                 = "US"
-  force_destroy            = true
-  public_access_prevention = "enforced"
+provider "google" {
+  project = var.project_id
+  region  = var.region
 }
-#
-resource "google_storage_bucket" "my-bucket2" {
-  name                     = "gcp-demo2"
-  project                  = "tt-dev-001"
-  location                 = "US"
-  force_destroy            = true
-  public_access_prevention = "enforced"
+
+resource "google_storage_bucket" "jenkins_bucket" {
+  name     = var.bucket_name
+  location = var.region
+  force_destroy = true
+
+  uniform_bucket_level_access = true
+
+  versioning {
+    enabled = true
+  }
 }

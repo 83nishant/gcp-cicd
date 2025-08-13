@@ -2,7 +2,7 @@ pipeline {
     agent any
 	
     environment {
-        GOOGLE_APPLICATION_CREDENTIALS = credentials('storage_bucket')
+        GOOGLE_APPLICATION_CREDENTIALS = credentials('storage')
 	GIT_TOKEN = credentials('git-token')
     }
 	

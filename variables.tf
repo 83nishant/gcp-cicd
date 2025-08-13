@@ -1,5 +1,5 @@
 variable "project_id" {
-  description = "The GCP project ID"
+  description = "tranquil-marker-468804-h3"
   type        = string
 }
 

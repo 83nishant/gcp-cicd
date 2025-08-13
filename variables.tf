@@ -8,7 +8,7 @@ variable "region" {
   default     = "us-central1"
 }
 
-variable "bucket_name" {
-  description = "The name of the storage bucket"
+variable "bucket_name_prefix" {
+  description = "nsd+"
   type        = string
 }
